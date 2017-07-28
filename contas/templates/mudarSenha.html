@@ -1,0 +1,33 @@
+{% extends 'user_default.html' %}
+
+{% block extra-title %} - Mude sua senha {% endblock %}
+
+{% block content %}
+
+<form class="form-signin" method="post" role="form">
+  {% csrf_token %}
+  <!-- {{ form }} -->
+  <label for="id_antiga_senha">Senha atual</label>
+  <input type="senha" id="id_antiga_senha" name="antiga_senha" class="form-control" placehantigaer="********" required>
+  <hr/>
+  <label for="id_nova_senha1">Nova senha</label>
+  <input type="senha" id="id_nova_senha1" name="nova_senha1" class="form-control" placehantigaer="********" required>
+  <br>
+  <label for="id_nova_senha2">Verifique sua nova senha</label>
+  <input type="senha" id="id_nova_senha2" name="nova_senha2" class="form-control" placehantigaer="********" required>
+  <hr/>
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Salvar alterações</button>
+  {% if form.error_messages %}
+      <hr/>
+      <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      {% for error in form.error_messages.values %}
+          <div class="well-sm">{{error}}</div>
+      {% endfor %}
+      </div>
+  {% endif %}
+
+</form>
+
+
+{% endblock %}

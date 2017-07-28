@@ -1,0 +1,39 @@
+{% extends 'user_default.html' %}
+
+{% block extra-title %} - Change your senha {% endblock %}
+
+{% block content %}
+
+<form class="form-signin" method="post" role="form">
+  {% csrf_token %}
+
+  <div class="form-group">
+      <label for="id_email">E-mail</label>
+      <input type="email" id="id_email" name="email" class="form-control" placeholder="nome@dominio.com" required autofocus>
+  </div>
+
+  <label for="id_nova_senha1">Sua nova senha</label>
+  <input type="senha" id="id_nova_senha1" name="nova_senha1" class="form-control" placeholder="********" required>
+
+  <br>
+
+  <label for="id_nova_senha2">Verifique sua nova senha</label>
+  <input type="senha" id="id_nova_senha2" name="nova_senha2" class="form-control" placeholder="********" required>
+  <hr/>
+
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Salvar alterações</button>
+
+  <hr/>
+
+  {% if form.errors %}
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      {{ form.errors }}
+    </div>
+    <hr/>
+  {% endif %}
+
+</form>
+
+
+{% endblock %}

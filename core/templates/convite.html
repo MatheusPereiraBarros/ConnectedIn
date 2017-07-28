@@ -1,0 +1,57 @@
+{% extends 'inicial.html' %}
+
+{% block js %}
+$('.dropdown-toggle').dropdown()
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+                {% if invited %}
+                    Você tem {{invited.count}} solicitações a responder{{invited.count|pluralize:"s"}}
+                {% else %}
+                    Sem convites a responder
+                {% endif %}
+            {% if invited %}
+            <div class="panel-body">
+                <div class="list-group clearfix">
+                    {% for invite in invited %}
+                        <div class="list-group-item clearfix">
+                            <span>Name: <a href="{% url 'show_profile' invite.invitee.id %}">{{ invite.invitee.name }}</a> // E-mail: {{ invite.invitee.email }}</span>
+                            <a href="{% url 'invite_decline' invite.id %}" class="btn-link pull-right" style="margin-left:1em">Decline</a>
+                            <a href="{% url 'invite_accept' invite.id %}" class="btn-link pull-right">Accept</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+                {% if convites %}
+                    Você fez {{convites.count}} solicitações{{invited.count|pluralize:"s"}}
+                {% else %}
+                    Não foram realizadas solicitações
+                {% endif %}
+            </div>
+            {% if convites %}
+            <div class="panel-body">
+                <div class="list-group">
+                {% for invite in convites %}
+                    <div class="list-group-item">Nome: <a href="{% url 'show_profile' invite.invited.id %}">{{ invite.invited.name }}</a> // E-mail: {{ invite.invited.email }}</div>
+                {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

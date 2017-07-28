@@ -1,0 +1,38 @@
+{% extends 'inicial.html' %}
+
+{% block js %}
+$('.dropdown-toggle').dropdown()
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            
+                <span>
+                {% if friends %}
+                    Você tem {{friends.count}} friends {{friends.count|pluralize:"s"}}
+                {% else %}
+                    Você não tem amigos
+                {% endif %}
+                </span>
+            
+            {% if friends %}
+            <div class="panel-body">
+                <div class="list-group clearfix">
+                    {% for friend in friends %}
+                        <div class="list-group-item clearfix">
+                            <span>Name: <a href="{% url 'show_profile' friend.id %}">{{ friend.name }}</a> // E-mail: {{ friend.email }}</span>
+                            <span class="pull-right">  <a href="{% url 'remove_a_friend' friend.id %}" class="btn-link">Excluir</a></span>
+                            <a href="{% url 'block' friend.id %}" class="btn-link pull-right">Block</a>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

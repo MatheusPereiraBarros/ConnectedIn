@@ -1,0 +1,30 @@
+{% extends "user_default.html" %}
+
+
+{% block extra-title %} {% endblock %}
+
+{% block content %}
+
+    <form class="form-signin" role="form" action="{% url 'login' %}" method="post">
+    {% csrf_token %}
+        <input type="email" id="field_username" name="username" class="form-control" placeholder="nome@dominio.com" required autofocus>
+        <hr/>
+        <input type="password" id="field_password" name="password" class="form-control" placeholder="********" required>
+        <hr/>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" value="Login">Login</button>
+    {% if form.errors %}
+        <hr/>
+        <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        O e-mail ou senha não conferem...
+        </div>
+    {% endif %}
+
+    </form>
+        <a href="../" class="btn btn-lg btn-danger btn-block" >Voltar</a>
+
+
+<button class="btn btn-sm btn-block btn-link"><a href="{% url 'esqueci_senha' %}">Esqueci a senha</a></button>
+
+
+{% endblock %}

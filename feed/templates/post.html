@@ -1,0 +1,112 @@
+{% extends 'inicial.html' %}
+{% load staticfiles %}
+
+{% block js %}
+
+    function savePost() {
+
+        var text = document.getElementById('text-input').value;
+
+        $.ajax({
+                url: "{% url 'edit_post' post.id %}",
+                data: {
+                    'new_content': text,
+                },
+                dataType: 'json',
+              
+        });
+
+        return true;
+    };
+
+    function cancelEdit() {
+        $("#hidden-edit").hide();
+        $("#editable-content").show();
+        return true;
+    };
+
+    function editPost() {
+        $("#editable-content").hide();
+        $("#hidden-edit").show();
+        return true;
+    };
+
+    var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+    function csrfSafeMethod(method) {
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    };
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+{% endblock %}
+
+{% block content %}
+
+<div class="row card-border">
+  <div class="col-md-11 col-xs-11">
+    <div class="media">
+      <div class="media-left media-middle" style="padding-right: 1.5em;">
+      </div>
+      <div class="media-body">
+        <div class="media-heading">
+            <h4><a href="{% url 'show_profile' post.profile.id %}">
+                @{{post.profile.user.username}}
+            </a></h4>
+        </div>
+        <div id="editable-content" class="inline-editable">
+            <p>{{post.content|linebreaksbr}}</p>
+            {% if post.image %}
+              <img src="{{post.image.url}}"/>
+            {% endif %}
+        </div>
+        <div id="hidden-edit" style="display:none">
+          <form class="inline-editor" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="input-group">
+              <input type="text" id="text-input" class="form-control" maxlength="256" placeholder="No que você está pensando?" value="{{post.content}}" required >
+              <div class="input-group-btn">
+                  <button class="btn btn-danger" onclick="cancelEdit();"><i class="mdi mdi-close"></i></button>
+                  <button id="submit" class="btn btn-default" type="submit" value="Submit" onclick="savePost();"><i class=""></i></button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-1 col-xs-1">
+    <div class="pull-right">
+      <div class="dropdown pull-right">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1">
+        {% if current_profile.id == post.profile.id or current_profile.user.is_superuser %}
+          <li><a href="{% url 'delete_post' post.id %}">Excluir postagem</a></li>
+        {% else %}
+          <li><a>None for now</a></li>
+        {% endif %}
+        {% if post.is_editable %}
+          <li role="separator" class="divider"></li>
+          <li><a onclick="javascript:editPost();">Edit</a></li>
+        {% endif %}
+        </ul>
+      </div>
+      <br/>
+    </div>
+  </div>
+</div>
+
+<hr/>
+
+
+
+{% endblock %}

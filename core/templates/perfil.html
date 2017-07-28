@@ -1,0 +1,82 @@
+{% extends 'inicial.html' %}
+{% block content %}
+
+<div class="row" style="margin-top: 1em;">
+    <div class="col-md-8 col-xs-9">
+        <div class="media">
+            <div class="media-body">
+                <div class="media-heading">
+                    <h2>{{profile.name}}</h2>
+                </div>
+                <address>
+                    {{profile.business}}<br/>
+                    Tel: {{profile.phone}}<br/>
+                    <a href="mailto:{{ profile.email }}">{{ profile.email }}</a>
+                </address>
+                {% if profile.pk is current_profile.pk %}
+                {% elif is_friend %}
+                  <div class="well well-sm"> {{profile.name}} já é seu amigo</div>
+                {% elif is_blocked_by %}
+                  <div class="well well-sm">Você bloqueou com sucesso!</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-xs-3">
+      <div class="pull-right">
+        <div class="dropdown" style="margin-top: 1.5em;">
+          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1">
+            {% if profile.pk is current_profile.pk %}
+              <li><a href="{% url 'mudarSenha' %}">Mudar senha</a></li>
+              <li><a href="{% url 'blocks' %}">Ver perfis bloqueados</a></li>
+              <li><a href="{% url 'deactivate_profile' profile.id %}">Desativar conta</a></li>
+              <li><a href="{% url 'remove_profile' profile.id %}">Apagar conta</a></li>
+            {% elif is_friend %}
+              <li><a href="{% url 'remove_a_friend' profile.id %}">Desfazer amizade</a></li>
+              <li><a href="{% url 'block' profile.id %}">Bloquear</a></li>
+            {% elif not has_invited and not has_blocked and not is_blocked_by %}
+              <li><a href="{% url 'invite_profile' profile.id %}">Adicionar amigo</a></li>
+              <li><a href="{% url 'block' profile.id %}">Bloquear</a></li>
+            {% elif has_blocked %}
+              <li><a href="{% url 'unblock' profile.id %}">Desbloquear</a></li>
+            {% elif is_blocked_by %}
+              <li><a href="{% url 'block' profile.id %}">Block</a></li>
+            {% else %}
+              <li><a>Nada por enquanto</a></li>
+            {% endif %}
+            {% if current_profile.user.is_superuser and not profile.user.is_superuser %}
+              <li><a href="{% url 'toggle_superuser' profile.id %}">Toggle superuser <i class="mdi mdi-close"></i></a></li>
+            {% elif current_profile.user.is_superuser and profile.user.is_superuser %}
+              <li><a href="{% url 'toggle_superuser' profile.id %}">Toggle superuser <i class="mdi mdi-check"></i></a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+</div>
+
+<hr/>
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        {% for post in profile.get_posts %}
+
+            <div class="media card-border">
+              <div class="media-body">
+                <h4>{{post.content}}</h4>
+                <h5 class="pull-right">{{post.edited_at}}</h5>
+              </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

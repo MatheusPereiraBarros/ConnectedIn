@@ -1,0 +1,87 @@
+{% extends 'inicial.html' %}
+{% load staticfiles %}
+{% block content %}
+
+{% if current_profile.user.is_superuser %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+                    {% if profiles %}
+                        Todos os perfis
+                    {% else %}
+                        Sem perfis!
+                    {% endif %}
+            {% if profiles %}
+                <div class="panel-body">
+                    <div class="list-group">
+                    {% for profile in profiles %}
+                        <div class="list-group-item">Nome: <a href="{% url 'show_profile' profile.id %}">{{ profile.name }}</a><br>E-mail: {{ profile.email }}</div>
+                    {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% elif current_profile %}
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        <form class="form-signin" action="{% url 'new_post' %}" method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <h4>Feed Inicial</h4>    
+            <div class="input-group">
+              <input type="text" id="field_name" name="content" class="form-control" placeholder="No que você está pensando?" maxlength="256" required>
+             
+              <div class="input-group-btn">
+                  <button class="btn btn-info" type="submit" value="Submit"><i class="mdi mdi-send"></i></button>
+              </div>
+            
+            </div>
+
+            <hr />
+
+            {% if form.errors %}
+            <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                {{ form.errors }}
+            </div>
+            <hr/>
+            {% endif %}
+
+        </form>
+
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        {% for post in posts %}
+
+            <div class="media card-border">
+              <div class="media-left media-top">
+              </div>
+              <div class="media-body">
+                  <h4 class="media-heading"><a href="{% url 'show_profile' post.profile.id %}">@{{post.profile.user.username}}</a></h4>
+                <h5>{{post.content}}</h5>
+                  <h6 class="pull-right"><a href="{% url 'view_post' post.id %}">{{post.edited_at}}</a></h6>
+              </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

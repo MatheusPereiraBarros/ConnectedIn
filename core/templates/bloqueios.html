@@ -1,0 +1,33 @@
+{% extends 'inicial.html' %}
+
+{% block js %}
+$('.dropdown-toggle').dropdown()
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+                {% if blocks %}
+                    Você fez {{blocks.count}} bloqueio(s){{blocks.count|pluralize:"s"}}
+                {% else %}
+                    Você não bloqueou ninguém
+                {% endif %}
+            {% if blocks %}
+            <div class="panel-body">
+                <div class="list-group clearfix">
+                    {% for block in blocks %}
+                        <div class="list-group-item clearfix">
+                            <span>Name: <a href="{% url 'show_profile' block.blocked.id %}">{{ block.blocked.name }}</a> // E-mail: {{ block.blocked.email }}</span>
+                            <a href="{% url 'unblock' block.blocked.id %}" class="btn-link pull-right">Unblock</a>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

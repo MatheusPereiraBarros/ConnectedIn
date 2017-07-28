@@ -1,0 +1,43 @@
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>ConnectedIn</title>
+    <link href="{% static 'styles/bootstrap.css' %}" rel="stylesheet"/>
+    <link href="{% static 'styles/materialdesignicons.css' %}" rel="stylesheet"/>
+    <link href="{% static 'styles/main.css' %}" rel="stylesheet"/>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+    <ul class="nav nav-pills pull-left">
+        {% if current_profile %}
+            <li><a href="{% url 'show_profile' current_profile.pk %}"><b>{{ current_profile.name }}</b></a></li>
+            <li><a href="{% url 'index' %}">Início</a></li>
+            <li><a href="{% url 'convites' %}">Solicitações <span class="badge">{{ current_profile.convites_received.count }}</span></a></li>
+            <li><a href="{% url 'friends' %}">Amigos <span class="badge">{{ current_profile.friends.count }}</span></a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        {% else %}
+            <li><a href="{% url 'login' %}"><b>Login</b></a></li>
+            <li><a href="{% url 'cadastrar' %}"><b>Cadastrar</b></a></li>
+        {% endif %}
+    </ul>
+    </div>
+
+    {% block content %}
+    {% endblock %}
+
+</div>
+
+<script src="{% static 'scripts/jquery-1.9.1.js' %}"></script>
+<script src="{% static 'scripts/bootstrap.js' %}"></script>
+<script>
+    {% block js %}
+    {% endblock %}
+</script>
+
+</body>
+</html>
